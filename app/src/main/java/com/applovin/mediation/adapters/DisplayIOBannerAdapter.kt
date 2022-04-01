@@ -27,6 +27,7 @@ import com.brandio.ads.listeners.SdkInitListener
 
 class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), MaxAdViewAdapter,
     MaxInterstitialAdapter {
+    private val TAG = "DisplayIOMediation";
     private var interstitialDIOAd: Ad? = null
     companion object {
         const val APP_ID = "7729"
@@ -116,6 +117,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
         interstitialListener: MaxInterstitialAdapterListener?,
         activity: Activity?
     ) {
+        Log.e(TAG, "requestAndLoadDisplayIOAd")
         // check type of the placement before cast to BannerPlacement or any other
         var placement = try {
             Controller.getInstance().getPlacement(plcID)
@@ -129,6 +131,8 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
             override fun onAdReceived(adProvider: AdProvider?) {
                 adProvider?.setAdLoadListener(object : AdLoadListener {
                     override fun onLoaded(ad: Ad?) {
+                        Log.e(TAG, "onLoaded")
+
                         var adView: View? = null
                         // check type of the placement before retrieve ad view
                         // can be also checked with placement IDs
@@ -152,8 +156,12 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                                 infeedContainer.bindTo(adView)
                             }
                             is InterstitialPlacement -> {
+                                Log.e(TAG, "onInterstitialAdLoaded")
+
                                 interstitialDIOAd = ad
                                 interstitialListener?.onInterstitialAdLoaded()
+                                Log.e(TAG, "after notify interstitialListener?.onInterstitialAdLoaded()")
+
                                 return
                             }
                         }
@@ -166,6 +174,8 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                     }
 
                     override fun onFailedToLoad(p0: DIOError?) {
+                        Log.e(TAG, "onFailedToLoad")
+
                         listener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
                         interstitialListener?.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED)
                     }
@@ -174,11 +184,15 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
             }
 
             override fun onNoAds(e: DIOError?) {
+                Log.e(TAG, "onNoAds")
+
                 listener?.onAdViewAdLoadFailed(MaxAdapterError.NO_FILL)
                 interstitialListener?.onInterstitialAdLoadFailed(MaxAdapterError.NO_FILL)
 
             }
         })
+        Log.e(TAG, "before requestAd()")
+
         adRequest.requestAd()
     }
 
@@ -202,7 +216,9 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
         activity: Activity?,
         listener: MaxInterstitialAdapterListener?
     ) {
-       if (interstitialDIOAd != null){
+        Log.e(TAG, "showInterstitialAd")
+
+        if (interstitialDIOAd != null){
            interstitialDIOAd!!.setEventListener(object : AdEventListener() {
                override fun onShown(p0: Ad?) {
                    listener?.onInterstitialAdDisplayed()

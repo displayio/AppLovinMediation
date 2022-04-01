@@ -45,10 +45,15 @@
             android:text="@string/infeed" />
 
         <Button
-            android:id="@+id/button_interstitial"
+            android:id="@+id/button_load_interstitial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/interstitial" />
+            android:text="@string/load_interstitial" />
+  <Button
+            android:id="@+id/button_show_interstitial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_interstitial" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

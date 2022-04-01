@@ -40,8 +40,11 @@ class FirstFragment : Fragment() {
         binding.buttonInfeed.setOnClickListener {
             (activity as MainActivity).createAd(MainActivity.AdUnitType.INFEED)
         }
-        binding.buttonInterstitial.setOnClickListener {
+        binding.buttonLoadInterstitial.setOnClickListener {
             (activity as MainActivity).createAd(MainActivity.AdUnitType.INTERSTITIAL)
+        }
+        binding.buttonShowInterstitial.setOnClickListener {
+            (activity as MainActivity).showIntersitial()
         }
     }
 

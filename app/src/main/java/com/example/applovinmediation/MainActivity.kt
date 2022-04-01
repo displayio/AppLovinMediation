@@ -32,7 +32,7 @@ import com.brandio.ads.exceptions.DIOError
 import com.brandio.ads.listeners.SdkInitListener
 import com.example.applovinmediation.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -77,7 +77,42 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
                 return
             }
         }
-        adView?.setListener(this)
+        adView?.setListener(object : MaxAdViewAdListener{
+            // MAX Ad Listener for inline ads
+            override fun onAdLoaded(maxAd: MaxAd) {
+                showToast("Ad Loaded!")
+            }
+
+            override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+                showToast("Ad Load Failed!")
+            }
+
+            override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
+                showToast("Ad Display Failed!")
+            }
+
+            override fun onAdClicked(maxAd: MaxAd) {
+                showToast("Ad Clicked!")
+            }
+
+            override fun onAdExpanded(maxAd: MaxAd) {
+                showToast("Ad Expanded!")
+            }
+
+            override fun onAdCollapsed(maxAd: MaxAd) {
+                showToast("Ad Collapsed!")
+            }
+
+            /* DO NOT USE - THIS IS RESERVED FOR FULLSCREEN ADS ONLY AND WILL BE REMOVED IN A FUTURE SDK RELEASE */
+            override fun onAdDisplayed(ad: MaxAd?) {
+                showToast("Ad Displayed!")
+            }
+
+            override fun onAdHidden(ad: MaxAd?) {
+                showToast("Ad Hidden!")
+            }
+
+        })
         adView?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, 800)
         adView?.gravity = CENTER
         adView?.setBackgroundColor(Color.WHITE)
@@ -96,7 +131,6 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
         interstitialAd.setListener(object : MaxAdListener{
             override fun onAdLoaded(ad: MaxAd?) {
                 showToast("Interstitial Ad Loaded!")
-                interstitialAd.showAd()
             }
 
             override fun onAdDisplayed(ad: MaxAd?) {
@@ -118,41 +152,6 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
 
         // Load the first ad
         interstitialAd.loadAd()
-    }
-
-
-    // MAX Ad Listener for inline ads
-    override fun onAdLoaded(maxAd: MaxAd) {
-        showToast("Ad Loaded!")
-    }
-
-    override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
-        showToast("Ad Load Failed!")
-    }
-
-    override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
-        showToast("Ad Display Failed!")
-    }
-
-    override fun onAdClicked(maxAd: MaxAd) {
-        showToast("Ad Clicked!")
-    }
-
-    override fun onAdExpanded(maxAd: MaxAd) {
-        showToast("Ad Expanded!")
-    }
-
-    override fun onAdCollapsed(maxAd: MaxAd) {
-        showToast("Ad Collapsed!")
-    }
-
-    /* DO NOT USE - THIS IS RESERVED FOR FULLSCREEN ADS ONLY AND WILL BE REMOVED IN A FUTURE SDK RELEASE */
-    override fun onAdDisplayed(ad: MaxAd?) {
-        showToast("Ad Displayed!")
-    }
-
-    override fun onAdHidden(ad: MaxAd?) {
-        showToast("Ad Hidden!")
     }
 
 
@@ -180,6 +179,10 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    fun showIntersitial() {
+        interstitialAd.showAd()
     }
 
     enum class AdUnitType {
