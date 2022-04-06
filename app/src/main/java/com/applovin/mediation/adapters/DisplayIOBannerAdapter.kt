@@ -18,6 +18,7 @@ import com.applovin.sdk.AppLovinSdkUtils.runOnUiThread
 import com.brandio.ads.*
 import com.brandio.ads.ads.Ad
 import com.brandio.ads.containers.InfeedAdContainer
+import com.brandio.ads.containers.InterscrollerContainer
 import com.brandio.ads.exceptions.DIOError
 import com.brandio.ads.listeners.AdEventListener
 import com.brandio.ads.listeners.AdLoadListener
@@ -120,7 +121,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
         var placement = try {
             Controller.getInstance().getPlacement(plcID)
         } catch (e: Exception) {
-            listener?.onAdViewAdLoadFailed(MaxAdapterError.INTERNAL_ERROR)
+            listener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
             return
         }
 
@@ -150,6 +151,17 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                                 val infeedContainer =
                                     placement.getInfeedContainer(activity, adRequest.id)
                                 infeedContainer.bindTo(adView)
+                            }
+                            is InterscrollerPlacement -> {
+                                adView = InterscrollerContainer.getAdView(activity)
+                                val interscrollerContainer =
+                                    placement.getContainer(activity, adRequest.id, null)
+                                try {
+                                    interscrollerContainer.bindTo(adView)
+                                } catch (e: Exception) {
+                                    listener?.onAdViewAdLoadFailed(MaxAdapterError.INTERNAL_ERROR)
+                                    e.printStackTrace()
+                                }
                             }
                             is InterstitialPlacement -> {
                                 interstitialDIOAd = ad

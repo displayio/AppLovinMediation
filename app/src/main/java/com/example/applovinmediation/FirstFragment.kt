@@ -43,6 +43,9 @@ class FirstFragment : Fragment() {
         binding.buttonInterstitial.setOnClickListener {
             (activity as MainActivity).createAd(MainActivity.AdUnitType.INTERSTITIAL)
         }
+        binding.buttonInterscroller.setOnClickListener {
+            (activity as MainActivity).createAd(MainActivity.AdUnitType.INTERSCROLLER)
+        }
     }
 
     override fun onDestroyView() {

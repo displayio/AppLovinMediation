@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private var adView: MaxAdView? = null
+    var adView: MaxAdView? = null
     private lateinit var interstitialAd: MaxInterstitialAd
 
-    private lateinit var rootAdView: ViewGroup
+    private var rootAdView: ViewGroup? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,17 +76,30 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
                 createInterstitialdAd("879e5078a8df075e")
                 return
             }
+            AdUnitType.INTERSCROLLER -> {
+                createInterscrollerAd("a7890d10e5dc7459")
+                return
+            }
         }
         adView?.setListener(this)
         adView?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, 800)
         adView?.gravity = CENTER
         adView?.setBackgroundColor(Color.WHITE)
 
-        rootAdView.removeAllViews()
-        rootAdView.addView(adView)
+        rootAdView?.removeAllViews()
+        rootAdView?.addView(adView)
 
-        // Load the ad
         adView?.loadAd()
+    }
+
+    private fun createInterscrollerAd(adUnitId: String) {
+        adView = MaxAdView(adUnitId, this)
+        adView?.setListener(this)
+        adView?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+        adView?.gravity = CENTER
+        adView?.loadAd()
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController.navigate(R.id.action_FirstFragment_to_SecondFragment)
     }
 
     fun createInterstitialdAd(adUnitId: String?) {
@@ -186,6 +199,7 @@ class MainActivity : AppCompatActivity(), MaxAdViewAdListener {
         BANNER,
         MEDIUMRECT,
         INFEED,
-        INTERSTITIAL
+        INTERSTITIAL,
+        INTERSCROLLER
     }
 }
