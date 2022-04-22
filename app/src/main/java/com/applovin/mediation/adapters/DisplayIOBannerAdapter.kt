@@ -102,6 +102,11 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
             return
         }
 
+        if (activity == null) {
+            listener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
+            return
+        }
+
         val plcID = parameters?.thirdPartyAdPlacementId
         requestAndLoadDisplayIOAd(
             plcID,
