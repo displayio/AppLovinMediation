@@ -118,7 +118,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
 
     private fun requestAndLoadDisplayIOAd(
         plcID: String?,
-        listener: MaxAdViewAdapterListener?,
+        inlineAdListener: MaxAdViewAdapterListener?,
         interstitialListener: MaxInterstitialAdapterListener?,
         activity: Activity?
     ) {
@@ -126,7 +126,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
         var placement = try {
             Controller.getInstance().getPlacement(plcID)
         } catch (e: Exception) {
-            listener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
+            inlineAdListener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
             return
         }
 
@@ -152,7 +152,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                                 )
                             }
                             is InfeedPlacement -> {
-                                adView = InfeedAdContainer.getAdView(activity)
+                                adView = InfeedAdContainer.getAdView(activity!!)
                                 val infeedContainer =
                                     placement.getInfeedContainer(activity, adRequest.id)
                                 infeedContainer.bindTo(adView)
@@ -164,7 +164,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                                 try {
                                     interscrollerContainer.bindTo(adView)
                                 } catch (e: Exception) {
-                                    listener?.onAdViewAdLoadFailed(MaxAdapterError.INTERNAL_ERROR)
+                                    inlineAdListener?.onAdViewAdLoadFailed(MaxAdapterError.INTERNAL_ERROR)
                                     e.printStackTrace()
                                 }
                             }
@@ -176,14 +176,14 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                         }
 
                         if (adView != null) {
-                            listener?.onAdViewAdLoaded(adView)
+                            inlineAdListener?.onAdViewAdLoaded(adView)
                         } else {
-                            listener?.onAdViewAdLoadFailed(MaxAdapterError.NO_FILL)
+                            inlineAdListener?.onAdViewAdLoadFailed(MaxAdapterError.NO_FILL)
                         }
                     }
 
                     override fun onFailedToLoad(p0: DIOError?) {
-                        listener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
+                        inlineAdListener?.onAdViewAdLoadFailed(MaxAdapterError.UNSPECIFIED)
                         interstitialListener?.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED)
                     }
                 })
@@ -191,7 +191,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
             }
 
             override fun onNoAds(e: DIOError?) {
-                listener?.onAdViewAdLoadFailed(MaxAdapterError.NO_FILL)
+                inlineAdListener?.onAdViewAdLoadFailed(MaxAdapterError.NO_FILL)
                 interstitialListener?.onInterstitialAdLoadFailed(MaxAdapterError.NO_FILL)
 
             }
