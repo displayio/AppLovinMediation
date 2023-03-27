@@ -30,7 +30,6 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
     MaxInterstitialAdapter {
     private var interstitialDIOAd: Ad? = null
     companion object {
-        const val APP_ID = "7729"
     }
 
     override fun initialize(
@@ -38,6 +37,8 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
         activity: Activity?,
         listener: MaxAdapter.OnCompletionListener?
     ) {
+        val appID: String? =
+            params?.serverParameters?.getString("app_id")
 
         if (!Controller.getInstance().isInitialized) {
             listener?.onCompletion(
@@ -48,7 +49,7 @@ class DisplayIOMediationAdapter(sdk: AppLovinSdk?) : MediationAdapterBase(sdk), 
                 Controller.getInstance().init(
                     activity!!,
                     null,
-                    Companion.APP_ID,
+                    appID!!,
                     object : SdkInitListener {
                         override fun onInit() {
                             listener?.onCompletion(

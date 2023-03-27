@@ -47,5 +47,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'com.applovin:applovin-sdk:+'
-    implementation 'com.brandio.ads:sdk:4.6.6'
+    implementation 'com.brandio.ads:sdk:4.6.5'
 }
